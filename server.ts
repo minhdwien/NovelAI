@@ -206,10 +206,11 @@ Hãy đồng sáng tác chương "${currentChapter.title || `Chương ${currentC
       contents: promptText + `
 
 --- QUY TẮC PHẢN HỒI JSON BẮT BUỘC ---
-Kết quả trả về phải là một object JSON duy nhất chứa ba trường:
+Kết quả trả về phải là một object JSON duy nhất chứa bốn trường:
 1. "content": Nội dung chương tiểu thuyết (string).
 2. "characterUpdates": Mảng các nhân vật mới xuất hiện hoặc được cập nhật, cấu trúc { name, gender, biography, personality, skills, startingPower }.
 3. "suggestedPaths": Mảng 3 gợi ý đường đi tiếp theo cho câu chuyện (array of strings).
+4. "storyProfileUpdates": Một object chứa các cập nhật trong hồ sơ truyện (Ví dụ: { "idea": "...", "worldBackground": "..." }). Nếu không có thay đổi gì, hãy để là null. Nếu cập nhật các danh sách như "rules", "cultivationSystem", "ranks", "currencies", hãy cung cấp danh sách đầy đủ mới sau khi cập nhật.
 
 Hãy viết câu trả lời của bạn đúng định dạng JSON này.
 `,
@@ -265,7 +266,9 @@ async function start() {
     });
   }
 
-export default app;
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`[OK] Server running on http://0.0.0.0:${PORT}`);
+  });
 }
 
 start();

@@ -385,6 +385,13 @@ export default function App() {
       const generatedProse = data.content;
       const updates = data.characterUpdates || [];
       const suggestedPaths = data.suggestedPaths || [];
+      const profileUpdates = data.storyProfileUpdates;
+
+      // Process automatic story profile updates
+      if (profileUpdates) {
+        setProfile(p => ({ ...p, ...profileUpdates }));
+        showNotification('AI đã tự động cập nhật Hồ sơ tác phẩm!');
+      }
 
       // Process automatic character updates
       if (updates.length > 0) {
