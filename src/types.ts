@@ -37,6 +37,7 @@ export interface Chapter {
   content: string; // The written text of the chapter
   wordCount: number;
   createdAt: string;
+  suggestedPaths?: string[]; // AI-suggested story paths
 }
 
 export interface AISettings {

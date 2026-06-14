@@ -206,9 +206,10 @@ Hãy đồng sáng tác chương "${currentChapter.title || `Chương ${currentC
       contents: promptText + `
 
 --- QUY TẮC PHẢN HỒI JSON BẮT BUỘC ---
-Kết quả trả về phải là một object JSON duy nhất chứa hai trường:
+Kết quả trả về phải là một object JSON duy nhất chứa ba trường:
 1. "content": Nội dung chương tiểu thuyết (string).
-2. "characterUpdates": Mảng các nhân vật mới xuất hiện mà chưa có trong tiểu thuyết, hoặc thông tin được cập nhật sâu hơn (nếu có, nếu không thì mảng rỗng []). Mỗi nhân vật trong mảng phải có cấu trúc { name, gender, biography, personality, skills, startingPower }.
+2. "characterUpdates": Mảng các nhân vật mới xuất hiện hoặc được cập nhật, cấu trúc { name, gender, biography, personality, skills, startingPower }.
+3. "suggestedPaths": Mảng 3 gợi ý đường đi tiếp theo cho câu chuyện (array of strings).
 
 Hãy viết câu trả lời của bạn đúng định dạng JSON này.
 `,
@@ -236,6 +237,7 @@ Hãy viết câu trả lời của bạn đúng định dạng JSON này.
       success: true,
       content: data.content,
       characterUpdates: data.characterUpdates || [],
+      suggestedPaths: data.suggestedPaths || [],
     });
 
   } catch (error: any) {

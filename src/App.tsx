@@ -384,6 +384,7 @@ export default function App() {
 
       const generatedProse = data.content;
       const updates = data.characterUpdates || [];
+      const suggestedPaths = data.suggestedPaths || [];
 
       // Process automatic character updates
       if (updates.length > 0) {
@@ -408,15 +409,29 @@ export default function App() {
       }
 
       // Update chapters depending on actionType
+      const updatedChapters = chapters.map(c => {
+        if (c.id !== activeChapter.id) return c;
+        
+        let newContent = c.content;
+        if (actionType === 'continue') {
+          newContent = c.content ? `${c.content}\n\n${generatedProse}` : generatedProse;
+        } else {
+          newContent = generatedProse;
+        }
+        
+        return {
+          ...c,
+          content: newContent,
+          suggestedPaths: suggestedPaths,
+          wordCount: newContent.trim().split(/\s+/).filter(Boolean).length
+        };
+      });
+      
+      setChapters(updatedChapters);
+
       if (actionType === 'continue') {
-        const appendedContent = activeChapter.content 
-          ? `${activeChapter.content}\n\n${generatedProse}` 
-          : generatedProse;
-        handleUpdateChapterField('content', appendedContent);
         showNotification('AI đã hoàn viết tiếp nối phân hợp lưu chuyển mượt mà!');
       } else {
-        // writeNew or elaborate overwrites/produces the new draft of the chapter
-        handleUpdateChapterField('content', generatedProse);
         showNotification('Đồng sáng tác tiểu thuyết thành công! Hãy đọc văn bản bên dưới.');
       }
       setUserInstruction(''); // clear input box
@@ -1168,6 +1183,26 @@ export default function App() {
                       Viết chi tiết hóa mảnh nháp
                     </button>
                   </div>
+
+                  {/* AI Suggested Paths Rendering */}
+                  {activeChapter?.suggestedPaths && activeChapter.suggestedPaths.length > 0 && (
+                    <div className="bg-[#fdfcf9] border border-[#d8d5ca] p-3 rounded-lg shadow-inner mt-2">
+                      <h4 className="text-[10px] font-bold text-[#555042] mb-1.5 uppercase flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Gợi ý cốt truyện tiếp theo
+                      </h4>
+                      <div className="flex flex-col gap-1.5">
+                        {activeChapter.suggestedPaths.map((path, idx) => (
+                          <button 
+                            key={idx} 
+                            className="w-full text-left text-xs bg-white text-gray-700 hover:bg-amber-50 hover:text-amber-950 p-2 rounded shadow-xs border border-[#e4e2d8] transition-all"
+                            onClick={() => setUserInstruction(path)}
+                          >
+                            {path}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                 </div>
 
