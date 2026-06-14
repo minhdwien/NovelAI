@@ -203,7 +203,15 @@ Hãy đồng sáng tác chương "${currentChapter.title || `Chương ${currentC
     // Call Gemini API with system instruction configured
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
-      contents: promptText,
+      contents: promptText + `
+
+--- QUY TẮC PHẢN HỒI JSON BẮT BUỘC ---
+Kết quả trả về phải là một object JSON duy nhất chứa hai trường:
+1. "content": Nội dung chương tiểu thuyết (string).
+2. "characterUpdates": Mảng các nhân vật mới xuất hiện mà chưa có trong tiểu thuyết, hoặc thông tin được cập nhật sâu hơn (nếu có, nếu không thì mảng rỗng []). Mỗi nhân vật trong mảng phải có cấu trúc { name, gender, biography, personality, skills, startingPower }.
+
+Hãy viết câu trả lời của bạn đúng định dạng JSON này.
+`,
       config: {
         systemInstruction: systemPrompt,
         temperature: 1.0,
@@ -211,11 +219,23 @@ Hãy đồng sáng tác chương "${currentChapter.title || `Chương ${currentC
       },
     });
 
-    const generatedText = response.text || "AI không thể sinh văn bản. Vui lòng kiểm tra lại ý tưởng hoặc thử lại.";
+    const responseText = response.text || "{}";
+    let data;
+    try {
+      // Find the JSON block if the model included extra text
+      const jsonStart = responseText.indexOf("{");
+      const jsonEnd = responseText.lastIndexOf("}");
+      const jsonString = responseText.substring(jsonStart, jsonEnd + 1);
+      data = JSON.parse(jsonString);
+    } catch (e) {
+      console.error("Failed to parse JSON response from Gemini:", responseText);
+      throw new Error("AI trả về định dạng nội dung không hợp lệ, vui lòng thử lại.");
+    }
     
     return res.json({
       success: true,
-      content: generatedText,
+      content: data.content,
+      characterUpdates: data.characterUpdates || [],
     });
 
   } catch (error: any) {

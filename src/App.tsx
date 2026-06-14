@@ -383,6 +383,29 @@ export default function App() {
       }
 
       const generatedProse = data.content;
+      const updates = data.characterUpdates || [];
+
+      // Process automatic character updates
+      if (updates.length > 0) {
+        let addedCount = 0;
+        setProfile(p => {
+          const currentNames = p.characters.map(c => c.name.toLowerCase());
+          const newChars = updates.filter((u: any) => !currentNames.includes(u.name.toLowerCase())).map((u: any) => ({
+            ...u,
+            id: `char-${Date.now()}-${Math.random() * 1000}`
+          }));
+          
+          if (newChars.length > 0) {
+            addedCount = newChars.length;
+            return { ...p, characters: [...p.characters, ...newChars] };
+          }
+          return p;
+        });
+        
+        if (addedCount > 0) {
+          showNotification(`AI đã phát hiện và thêm ${addedCount} nhân vật mới vào hồ sơ!`);
+        }
+      }
 
       // Update chapters depending on actionType
       if (actionType === 'continue') {
