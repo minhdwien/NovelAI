@@ -465,10 +465,10 @@ export default function App() {
       </header>
 
       {/* WORKSPACE AREA Container */}
-      <main id="app-main-workspace" className="flex-1 max-w-7xl w-full mx-auto p-3 lg:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <main id="app-main-workspace" className="flex-1 max-w-7xl w-full mx-auto p-3 md:p-4 grid grid-cols-1 md:grid-cols-12 gap-4">
         
         {/* LEFT COLUMN: STORY PROFILE SYSTEM (Steps 1, 2, 3 wizard customizable at any time) */}
-        <section id="sidebar-story-profile" className="lg:col-span-5 flex flex-col gap-4">
+        <section id="sidebar-story-profile" className="md:col-span-5 lg:col-span-4 flex flex-col gap-4">
           
           <div className="bg-[#FAF9F5] border border-[#dbd8cf] rounded-2xl shadow-sm overflow-hidden flex flex-col h-full">
             
@@ -524,7 +524,7 @@ export default function App() {
             </div>
 
             {/* STEP SCROLL CONTENT PANEL */}
-            <div className="p-4 flex-1 overflow-y-auto max-h-[640px] custom-scrollbar bg-[#FAF9F5]">
+            <div className="p-4 flex-1 overflow-y-auto max-h-[640px] md:max-h-[700px] lg:max-h-[800px] custom-scrollbar bg-[#FAF9F5]">
 
               {/* BƯỚC 1: TỔNG QUAN */}
               {profileStep === 1 && (
@@ -927,7 +927,7 @@ export default function App() {
         </section>
 
         {/* RIGHT COLUMN: CHAPTER WORKSPACE & AI INTERACTIVE PROCESS */}
-        <section id="main-editor-workspace" className="lg:col-span-7 flex flex-col gap-4">
+        <section id="main-editor-workspace" className="md:col-span-7 lg:col-span-8 flex flex-col gap-4">
           
           {/* TOP CONTROLS: CHỌN CHƯƠNG & KHỞI TẠO CHƯƠNG */}
           <div className="bg-[#FAF9F5] border border-[#dbd8cf] p-4 rounded-xl shadow-xs flex flex-wrap items-center justify-between gap-4">
