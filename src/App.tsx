@@ -124,6 +124,8 @@ export default function App() {
   });
 
   // Current active entity view
+  const [activeSection, setActiveSection] = useState<'writing' | 'configuration' | 'profile'>('writing');
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [profileStep, setProfileStep] = useState<number>(1);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [userInstruction, setUserInstruction] = useState<string>('');
@@ -476,44 +478,51 @@ export default function App() {
       </AnimatePresence>
 
       {/* TOP DECORATIVE HEADER BAR */}
-      <header id="app-header" className="sticky top-0 z-40 bg-[#161512]/95 border-b border-[#2e2a22] text-amber-50/90 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
-          
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-gradient-to-br from-amber-600 to-red-800 rounded-xl shadow-inner border border-amber-500/30">
-              <PenTool className="w-6 h-6 text-amber-100" />
+      {isHeaderVisible && (
+        <header id="app-header" className="sticky top-0 z-40 bg-[#161512]/95 border-b border-[#2e2a22] text-amber-50/90 shadow-md">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 bg-gradient-to-br from-amber-600 to-red-800 rounded-xl shadow-inner border border-amber-500/30">
+                <PenTool className="w-6 h-6 text-amber-100" />
+              </div>
+              <div>
+                <h1 id="app-main-title" className="font-serif font-bold text-xl md:text-2xl text-amber-100 tracking-tight flex items-center gap-2">
+                  Hợp Tác Viết Tiểu Thuyết AI <span className="font-sans text-[10px] bg-red-900/60 border border-red-500/30 text-red-200 px-1.5 py-0.5 rounded font-bold uppercase tracking-widest">Co-Write Workspace</span>
+                </h1>
+                <p className="text-xs text-amber-300/60 font-mono">Bút pháp Orinlo Core & Hồ Sơ Thế Giới Hoàn Chỉnh</p>
+              </div>
             </div>
-            <div>
-              <h1 id="app-main-title" className="font-serif font-bold text-xl md:text-2xl text-amber-100 tracking-tight flex items-center gap-2">
-                Hợp Tác Viết Tiểu Thuyết AI <span className="font-sans text-[10px] bg-red-900/60 border border-red-500/30 text-red-200 px-1.5 py-0.5 rounded font-bold uppercase tracking-widest">Co-Write Workspace</span>
-              </h1>
-              <p className="text-xs text-amber-300/60 font-mono">Bút pháp Orinlo Core & Hồ Sơ Thế Giới Hoàn Chỉnh</p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <button 
-              id="reset-state-btn"
-              onClick={handleResetDraft}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-amber-200 hover:text-amber-50 border border-amber-900/80 hover:bg-[#201e19] rounded-lg transition-colors cursor-pointer"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Dùng Bối Cảnh Mẫu</span>
-            </button>
-            <div className="hidden lg:flex items-center gap-1.5 text-[11px] font-mono text-emerald-400 bg-emerald-950/50 border border-emerald-920/40 px-2.5 py-1 rounded-full uppercase tracking-wider">
-              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
-              Linh Khí Sẵn Sàng
+            <div className="flex items-center gap-3">
+              <button 
+                id="reset-state-btn"
+                onClick={handleResetDraft}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-amber-200 hover:text-amber-50 border border-amber-900/80 hover:bg-[#201e19] rounded-lg transition-colors cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Dùng Bối Cảnh Mẫu</span>
+              </button>
+              <div className="hidden lg:flex items-center gap-1.5 text-[11px] font-mono text-emerald-400 bg-emerald-950/50 border border-emerald-920/40 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
+                Linh Khí Sẵn Sàng
+              </div>
             </div>
-          </div>
 
-        </div>
-      </header>
+          </div>
+        </header>
+      )}
 
       {/* WORKSPACE AREA Container */}
-      <main id="app-main-workspace" className="flex-1 max-w-7xl w-full mx-auto p-3 md:p-4 grid grid-cols-1 md:grid-cols-12 gap-4">
+      <main id="app-main-workspace" className="flex-1 max-w-7xl w-full mx-auto p-3 md:p-4 grid grid-cols-1 md:grid-cols-12 gap-4 pb-20 md:pb-4">
         
-        {/* LEFT COLUMN: STORY PROFILE SYSTEM (Steps 1, 2, 3 wizard customizable at any time) */}
-        <section id="sidebar-story-profile" className="md:col-span-5 lg:col-span-4 flex flex-col gap-4">
+        {/* Mobile Navigation */}
+        <div className="md:hidden fixed bottom-0 left-0 w-full bg-[#161512] border-t border-[#2e2a22] flex p-1 z-50">
+          <button onClick={() => setActiveSection('writing')} className={`flex-1 py-2 text-xs font-bold ${activeSection === 'writing' ? 'text-amber-500' : 'text-amber-200'}`}>Viết Truyện</button>
+          <button onClick={() => setActiveSection('configuration')} className={`flex-1 py-2 text-xs font-bold ${activeSection === 'configuration' ? 'text-amber-500' : 'text-amber-200'}`}>Cấu hình</button>
+          <button onClick={() => setActiveSection('profile')} className={`flex-1 py-2 text-xs font-bold ${activeSection === 'profile' ? 'text-amber-500' : 'text-amber-200'}`}>Hồ sơ</button>
+        </div>
+        <section id="sidebar-story-profile" className={`md:col-span-5 lg:col-span-4 flex-col gap-4 ${activeSection === 'writing' ? 'hidden md:flex' : 'flex'}`}>
           
           <div className="bg-[#FAF9F5] border border-[#dbd8cf] rounded-2xl shadow-sm overflow-hidden flex flex-col h-full">
             
@@ -523,6 +532,12 @@ export default function App() {
                 <Compass className="w-5 h-5 text-amber-400" />
                 <h2 className="font-serif font-semibold text-base">Hồ Sơ Cốt Truyện Bảo Bản</h2>
               </div>
+              <button 
+                onClick={() => setIsHeaderVisible(!isHeaderVisible)}
+                className="text-xs bg-amber-950/50 px-2 py-1 rounded text-amber-200"
+              >
+                {isHeaderVisible ? 'Ẩn Header' : 'Hiện Header'}
+              </button>
               <div className="text-[11px] font-mono text-amber-300-40 px-2 py-0.5 bg-amber-950/70 border border-amber-800/40 rounded-full">
                 Sư Đồ - Tu Chân
               </div>
@@ -570,6 +585,36 @@ export default function App() {
 
             {/* STEP SCROLL CONTENT PANEL */}
             <div className="p-4 flex-1 overflow-y-auto max-h-[640px] md:max-h-[700px] lg:max-h-[800px] custom-scrollbar bg-[#FAF9F5]">
+                <div className="flex gap-2 mb-4 justify-between">
+                  <button className="text-xs bg-white border border-[#dbd8cf] px-3 py-1.5 rounded-lg font-bold" onClick={() => {
+                        const blob = new Blob([JSON.stringify({profile, chapters, settings})], {type: 'application/json'});
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'novel_data.json';
+                        a.click();
+                      }}>Xuất Hồ sơ</button>
+                  <label className="text-xs bg-white border border-[#dbd8cf] px-3 py-1.5 rounded-lg font-bold cursor-pointer">
+                    Nhập Hồ sơ
+                    <input type="file" className="hidden" accept=".json" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if(!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (e) => {
+                        try {
+                          const data = JSON.parse(e.target?.result as string);
+                          setProfile(data.profile);
+                          setChapters(data.chapters);
+                          setSettings(data.settings);
+                          showNotification('Đã nhập hồ sơ thành công!');
+                        } catch(e) {
+                          showNotification('File không hợp lệ!', true);
+                        }
+                      };
+                      reader.readAsText(file);
+                    }}/>
+                  </label>
+                </div>
 
               {/* BƯỚC 1: TỔNG QUAN */}
               {profileStep === 1 && (
@@ -972,7 +1017,7 @@ export default function App() {
         </section>
 
         {/* RIGHT COLUMN: CHAPTER WORKSPACE & AI INTERACTIVE PROCESS */}
-        <section id="main-editor-workspace" className="md:col-span-7 lg:col-span-8 flex flex-col gap-4">
+        <section id="main-editor-workspace" className={`md:col-span-7 lg:col-span-8 flex-col gap-4 ${activeSection === 'writing' ? 'flex' : 'hidden md:flex'}`}>
           
           {/* TOP CONTROLS: CHỌN CHƯƠNG & KHỞI TẠO CHƯƠNG */}
           <div className="bg-[#FAF9F5] border border-[#dbd8cf] p-4 rounded-xl shadow-xs flex flex-wrap items-center justify-between gap-4">
